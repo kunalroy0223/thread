@@ -1,0 +1,120 @@
+$color_1: #fff;
+$color_2: white;
+$color_3: #4d4d4d;
+$font-family_1: monospace;
+$background-color_1: rgba(0, 0, 0, 0.2);
+$background-color_2: #fff;
+$background-color_3: #000;
+$background-color_4: #0274b3;
+$background-color_5: #24262a;
+$background-color_6: #3b5998;
+
+@keyframes gradient {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+@keyframes wave {
+  2%   { transform: translateX(1px); }
+  25%  { transform: translateX(-25%); }
+  50%  { transform: translateX(-50%); }
+  75%  { transform: translateX(-25%); }
+  100% { transform: translateX(1px); }
+}
+
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wavy-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(
+    315deg,
+    rgb(241, 200, 200) 3%,
+    rgb(158, 158, 255) 25%,
+    rgb(138, 200, 238) 50%,
+    rgb(238, 168, 255) 75%,
+    rgb(255, 223, 180) 100%
+  );
+  animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+  background-attachment: fixed;
+  clip-path: ellipse(85% 100% at top);
+}
+
+#type {
+  color: $color_1;
+  font-family: $font-family_1;
+  overflow: hidden;
+  border-right: .15em solid orange;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation: typing 3.5s steps(30, end), blink-caret .5s step-end infinite;
+}
+
+.paint-order { paint-order: stroke fill; }
+
+@layer demo.support {
+ 
+  > div {
+    display: flex;
+    gap: .5ch;
+  }
+
+  section {
+    display: grid;
+    place-items: center;
+
+    > p {
+      border: 2px solid #aaa;
+      border-radius: 1000px;
+      padding-inline: 1.5ch;
+      line-height: 1.75;
+    }
+  }
+}
+
+.wave {
+  background: rgb(255 255 255 / 25%);
+  border-radius: 1000% 1000% 0 0;
+  position: absolute;
+  width: 200%;
+  height: 12em;
+  animation: wave 5s -3s linear infinite;
+  transform: translate3d(0, 0, 0);
+  opacity: 0.8;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+
+  &:nth-of-type(2) {
+    bottom: -1.25em;
+    animation: wave 5s linear reverse infinite;
+    opacity: 0.8;
+  }
+
+  &:nth-of-type(3) {
+    bottom: -2.5em;
+    animation: wave 5s -1s reverse infinite;
+    opacity: 0.9;
+  }
+}
+
+ul { list-style: none; }
+
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .wavy-section {
+    clip-path: ellipse(205% 100% at top);
+  }
+}
