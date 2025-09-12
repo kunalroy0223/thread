@@ -1,0 +1,158 @@
+/* From Uiverse.io by MikeAndrewDesigner */ 
+
+/* Container for multiple cards */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8rem;
+  flex-direction: row; // default layout
+  padding: 2rem;
+  position: relative;
+  overflow: hidden; // prevents huge .pulse circles from overlapping other sections
+}
+
+// Responsive: stack cards vertically on smaller screens
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+    gap:0.5rem;
+  }
+}
+
+/* Card styling */
+.e-card {
+  margin: 2rem auto;
+  background: transparent;
+  box-shadow: 0px 8px 28px -9px rgba(0,0,0,0.45);
+  position: relative;
+  width: 320px;
+  height: 410px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Animated pulse circles */
+.pulse {
+  position: absolute;
+  width: 700px;
+  height: 860px;
+  opacity: 0.6;
+  left: 0;
+  top: 0;
+  margin-left: -50%;
+  margin-top: -70%;
+  background: linear-gradient(
+    315deg,
+    rgb(241, 200, 200) 3%,
+    rgb(158, 158, 255) 25%,
+    rgb(138, 200, 238) 50%,
+    rgb(238, 168, 255) 75%,
+    rgb(255, 223, 180) 100%
+  );
+  border-radius: 40%;
+  animation: pulse 55s infinite linear;
+}
+
+.pulse:nth-child(2),
+.pulse:nth-child(3) {
+  top: 210px;
+}
+
+.playing .pulse {
+  border-radius: 40%;
+  animation: pulse 3000ms infinite linear;
+}
+
+.playing .pulse:nth-child(2) {
+  animation-duration: 4000ms;
+}
+
+.pulse:nth-child(2) {
+  animation-duration: 50s;
+}
+
+.playing .pulse:nth-child(3) {
+  animation-duration: 5000ms;
+}
+
+.pulse:nth-child(3) {
+  animation-duration: 45s;
+}
+
+@keyframes pulse {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icon styling */
+.icon {
+  width: 3em;
+  margin-top: -1em;
+  padding-bottom: 1em;
+}
+
+/* Info text container */
+.infotop {
+  text-align: center;
+  font-size: 20px;
+  position: absolute;
+  top: 5.6em;
+  left: 0;
+  right: 0;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+}
+
+/* Card image */
+.card-image {
+  height: 120px;
+  width: 120px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card-image img {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  border: 1px solid black;
+  display: block;
+}
+
+/* Card title styling */
+.card-title {
+  width: 250px;
+  position: relative;
+}
+
+.card-title p {
+  background: linear-gradient(to right, #4f46e5, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: clamp(20px, 5vw, 37px);
+  position: absolute;
+  top: 9rem;
+  left: 10rem;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Name styling */
+.name {
+  font-size: 16px;
+  font-weight: 100;
+  position: relative;
+  top: 9em;
+  padding: 1em;
+  text-transform: lowercase; // force lowercase
+  text-align: center;
+}

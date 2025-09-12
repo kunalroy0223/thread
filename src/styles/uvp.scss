@@ -1,0 +1,71 @@
+
+.Uvp {
+  min-height: 100vh; // instead of height: 100vh
+  padding-bottom: 6rem; // enough space so footer doesn’t overlap
+  position: relative; // for any absolutely positioned children
+}
+
+.uvp-container {
+    margin-top: 10vh;
+	max-width: 80rem;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	z-index: 0;
+}
+.uvp-title {
+	font-size: 2.25rem;
+	font-weight: 700;
+	color: #1f2937;
+	line-height: 1.25;
+	margin-bottom: 0.5rem;
+	span {
+		background: linear-gradient(to right, #4f46e5, #8b5cf6);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
+.uvp-subtitle {
+	font-size: 1.125rem;
+	color: #4b5563;
+	max-width: 48rem;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	line-height: 1.625;
+	padding-right: 2rem;
+    padding-left: 2rem;
+}
+.card-container{
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+      gap: 8rem;
+  justify-content: center;
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+}
+@media (min-width: 640px) {
+	.uvp-title {
+		font-size: 3rem;
+	}
+		.uvp-subtitle {
+		font-size: 0.8rem;
+	}
+}
+@media (min-width: 768px) {
+	.uvp-title {
+		font-size: 3.75rem;
+	}
+			.uvp-subtitle {
+		font-size: 0.8rem;
+	}
+}
+@media (min-width: 1024px) {
+	.uvp-title {
+		font-size: 5.5rem;
+	}
+	.uvp-subtitle {
+		font-size: 1.25rem;
+	}
+}

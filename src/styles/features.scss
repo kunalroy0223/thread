@@ -1,0 +1,73 @@
+
+.ft-section {
+  min-height: 100vh; // instead of height: 100vh
+  padding-bottom: 6rem; // enough space so footer doesn’t overlap
+  position: relative; // for any absolutely positioned children
+}
+.ft-container {
+	height: auto;
+	/*position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%; */
+	max-width: 80rem;
+	text-align: center;
+	z-index:0;
+}
+.ft-title {
+	font-size: 2.25rem;
+	font-weight: 700;
+	color: #1f2937;
+	line-height: 1.25;
+	margin-bottom: 0.5rem;
+	span {
+		background: linear-gradient(to right, #4f46e5, #8b5cf6);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+}
+.ft-subtitle {
+	font-size: 1.125rem;
+	color: #4b5563;
+	max-width: 48rem;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	line-height: 1.625;
+	padding-right: 2rem;
+    padding-left: 2rem;
+}
+@media (min-width: 640px) {
+	.ft-title {
+		font-size: 3rem;
+	}
+    		.ft-subtitle {
+		font-size: 1.25rem;
+	}
+}
+@media (min-width: 768px) {
+	.ft-title {
+		font-size: 3.75rem;
+	}
+    		.ft-subtitle {
+		font-size: 1.25rem;
+	}
+}
+@media (min-width: 1024px) {
+	.ft-title {
+		font-size: 5.5rem;
+	}
+		.ft-subtitle {
+		font-size: 1.25rem;
+	}
+}
+.ft-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers content horizontally */
+  justify-content: center; /* centers vertically if you add height */
+  gap: 2rem; /* space between children */
+  max-width: 1200px;
+  margin: 0 auto; /* centers container itself */
+  padding: 2rem 1rem; /* spacing inside container */
+}

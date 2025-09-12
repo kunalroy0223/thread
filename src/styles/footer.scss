@@ -1,19 +1,26 @@
-$color_1: white;
+$color_1: black;
 $color_2: #19cf68;
-$background-color-1:rgb(138, 200, 238);
+//$background-color-1:rgb(138, 200, 238);
 
 $background-color_2: #fff;
 
 /* Media Queries for Responsiveness */
 footer {
-	background-color: $background-color_1;
+  clip-path: ellipse(95% 100% at bottom);
+  background: linear-gradient(
+    315deg,
+    rgb(158, 158, 255) 3%,
+    rgb(243, 242, 242)25%,
+    rgb(243, 242, 242) 50%,
+    rgb(243, 242, 242) 75%,
+    rgb(238, 168, 255) 100%
+  );
 	color: $color_1;
 	padding: 20px 5%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	position: relative;
-	z-index: 1;
+	z-index: 0;
 	p {
 		margin: 0;
 		text-align: center;
@@ -50,8 +57,7 @@ footer {
 	img {
 		height: 24px;
 		transition: filter 0.3s ease;
-		filter: brightness(0) invert(1);
-		filter: brightness(0) invert(1);
+		//filter: brightness(0) invert(1);
 	}
 	a {
 		&:hover {
@@ -66,7 +72,7 @@ footer {
 		li {
 			margin: 5px 0;
 			a {
-				color: $color_1;
+				color: black;
 				text-decoration: none;
 				display: flex;
 				align-items: center;

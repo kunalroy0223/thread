@@ -8,10 +8,15 @@ $color_4: #374151;
 /* lg:text-7xl */
 /* sm:flex-row */
 .hero-container {
-	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	/*position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
-    left: 50%;
+    left: 50%; */
 	max-width: 80rem;
 	margin-left: auto;
 	margin-right: auto;
@@ -38,6 +43,8 @@ $color_4: #374151;
 	margin-right: auto;
 	margin-bottom: 2rem;
 	line-height: 1.625;
+	padding-right: 2rem;
+    padding-left: 2rem;
 }
 .cta-buttons {
 	display: flex;
@@ -92,5 +99,8 @@ $color_4: #374151;
 @media (min-width: 1024px) {
 	.hero-title {
 		font-size: 7.5rem;
+	}
+		.hero-subtitle {
+		font-size: 1.5rem;
 	}
 }

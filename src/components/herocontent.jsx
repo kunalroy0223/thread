@@ -12,7 +12,7 @@ const HeroContent = () => {
             Feeling like your stories fade away? Thread creates space where they can connect and grow</p>
         <div className="cta-buttons">
             <a href="#register" class="cta-primary">Register Now</a>
-            <a href="#learn" class="cta-secondary">Learn More</a>
+            <a href="#learn" class="cta-secondary">Login</a>
         </div>
         </div>
   );
