@@ -1,0 +1,126 @@
+:root {
+  --primary: #4f46e5;
+  --bg: #f9f9f9;
+  --card-bg: #fff;
+  --text-color: #111827;
+  --icon-color: #6b7280;
+}
+
+/* Full-width header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: #fff;
+  padding: 1rem 2rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  //position: fixed;
+}
+
+header .h-logo {
+  height: 3rem;
+
+  img {
+    width: 100%;
+    height: 10rem;
+    margin-top: -3rem;
+    margin-right: 9rem;
+    object-fit: contain;
+  }
+}
+
+header .notifications svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--text-color);
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+/* Post Creator */
+.post-creator {
+  background: var(--card-bg);
+  width: 90%;
+  max-width: 800px;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+  transition: width 0.3s ease;
+
+  /* Center horizontally and position below header */
+  margin: 5rem auto 0 auto; /* top margin = header height + spacing */
+}
+
+.h-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.h-row img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.h-row span.username {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.h-row textarea {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text-color);
+  font-family: inherit;
+  background: transparent;
+  cursor: text;
+}
+
+.h-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.h-icons svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--icon-color);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: stroke 0.2s ease;
+}
+
+.h-icons svg:hover {
+  stroke: var(--primary);
+}
+
+/* Hide post creator entirely on mobile */
+@media (max-width: 768px) {
+  .post-creator {
+    display: none;
+  }
+  
+  header {
+    padding: 0.75rem 1.5rem;
+    height: 4rem;
+  }
+
+  /* Mobile logo */
+  header .h-logo img {
+    margin-top: -3rem !important;
+    margin-right: 0 !important;
+  }
+}

@@ -1,0 +1,136 @@
+:root {
+  --bg: #ffffff;
+  --primary: #4f46e5;
+  --icon-color: #6b7280;
+  --icon-hover: #4f46e5;
+  --active-bg: rgba(79, 70, 229, 0.1);
+}
+
+/*body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  display: flex;
+  min-height: 100vh;
+} */
+
+.sidebar {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-right: 1px solid #e5e7eb;
+  height: 100vh;
+  width: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  color: var(--icon-color);
+  transition: 0.2s ease;
+  width: 50px;
+  height: 50px;
+  border-radius: 1rem;
+}
+
+.menu-item svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--icon-color);
+  transition: stroke 0.2s ease;
+}
+
+.menu-item:hover {
+  background: var(--active-bg);
+  color: var(--icon-hover);
+}
+
+.menu-item:hover svg {
+  stroke: var(--icon-hover);
+}
+
+.menu-item.active {
+  background: var(--active-bg);
+  color: var(--primary);
+}
+
+.menu-item.active svg {
+  stroke: var(--primary);
+}
+
+.logout {
+  margin-bottom: 1rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #ef4444;
+  transition: 0.2s ease;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.logout svg {
+  stroke: #ef4444;
+}
+
+.logout:hover svg {
+  stroke: #dc2626;
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 70px;
+    width: 100%;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .menu {
+    flex-direction: row;
+    margin: 0;
+    gap: 2.3rem;
+  }
+
+  .logout {
+    display: none;
+  }
+
+  main {
+    margin-left: 0 !important;
+    margin-bottom: 70px;
+  }
+}
