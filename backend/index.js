@@ -1,11 +1,10 @@
-// backend/index.js
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const PORT = process.env.PORT || 5000; // use Render's dynamic port
+const PORT = process.env.PORT || 5000;
 
 // Ensure upload directories exist
 const ensureDir = (dir) => {
@@ -30,7 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Enable CORS for frontend
+// Enable CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); 
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -41,11 +40,13 @@ app.use((req, res, next) => {
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Serve React frontend
+// Serve React frontend safely
 const frontendBuildPath = path.join(__dirname, "../dist");
 if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
-  app.get("*", (req, res) => {
+
+  // Regex-based catch-all route instead of '*'
+  app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendBuildPath, "index.html"));
   });
 }
@@ -58,7 +59,7 @@ app.post("/api/upload", upload.array("files"), (req, res) => {
 
     const fileUrls = req.files.map((file) => {
       const folder = file.mimetype.startsWith("image/") ? "images" : "videos";
-      return `/uploads/posts/${folder}/${file.filename}`; // relative URL, frontend will use same host
+      return `/uploads/posts/${folder}/${file.filename}`;
     });
 
     return res.json({ success: true, urls: fileUrls });
