@@ -1,0 +1,113 @@
+
+        .preview-wrapper {
+          width: 100%;
+          max-width: 800px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .preview-container {
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          box-sizing: border-box;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          background: #fff;
+          height: 70vh;
+        }
+
+        .preview-content-scroll {
+          overflow-y: auto;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .preview-title {
+          font-size: 2rem;
+          font-weight: bold;
+          margin: 0;
+        }
+
+        .preview-subtitle {
+          font-size: 1.2rem;
+          color: #555;
+          margin: 0;
+        }
+
+        .divider {
+          border: 0;
+          border-top: 1px solid #ccc;
+          margin: 8px 0;
+        }
+
+        .preview-content {
+          font-size: 1rem;
+          line-height: 1.6;
+          text-align: justify;
+          white-space: pre-wrap;
+        }
+
+        .preview-media {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .media-wrapper img,
+        .media-wrapper video {
+          max-width: 100%;
+          border-radius: 6px;
+        }
+
+        .preview-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 8px;
+        }
+
+        .prev-btn,
+        .post-btn {
+          padding: 10px 16px;
+          border-radius: 8px;
+          border: none;
+          cursor: pointer;
+          font-size: 1rem;
+        }
+
+        .prev-btn {
+          background: #ccc;
+          color: #333;
+        }
+
+        .post-btn {
+          background: #1976d2;
+          color: white;
+        }
+
+        .prev-btn:hover {
+          background: #aaa;
+        }
+
+        .post-btn:hover {
+          background: #115293;
+        }
+
+        @media (max-width: 600px) {
+          .preview-container {
+            padding: 15px;
+          }
+
+          .preview-title {
+            font-size: 1.6rem;
+          }
+
+          .preview-subtitle {
+            font-size: 1rem;
+          }
+        }

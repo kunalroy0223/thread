@@ -1,12 +1,168 @@
-# React + Vite
+# Blog Platform - Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. Overview
 
-Currently, two official plugins are available:
+This project is a **Blog Publishing Platform** that allows users to create, read, update, and delete blog posts. It uses your provided folder structure and tech stack:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Frontend:** React (with Context API, SCSS)
+* **Backend:** Node.js with Firebase integration
+* **Database:** Firebase (Firestore, Auth, Storage)
 
-## Expanding the ESLint configuration
+The project demonstrates **full-stack development skills**, **clean code structure**, and **AI tool utilization**.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 2. Project Structure
+
+```
+thread/ (root)
+├── backend/              # Node.js backend API
+│   ├── config/           # Firebase configuration
+│   ├── methods/          # CRUD and utility methods
+│   │   ├── auth.js
+│   │   ├── CreateBlog.js
+│   │   ├── GetPosts.js
+│   │   ├── GetUser.js
+│   │   ├── GetComments.js
+│   │   ├── PostComment.js
+│   │   └── GetAnalytics.js
+│   ├── uploads/posts/   # Uploaded blog images
+│   ├── index.js          # Entry point for backend server
+│   └── package.json
+│
+├── public/assets/        # Static assets
+│   ├── gif/
+│   ├── icons/
+│   ├── img/
+│   └── video/
+│
+├── src/                 # React Frontend
+│   ├── components/
+│   │   ├── landingPage/
+│   │   ├── loader/
+│   │   └── user/
+│   ├── context/         # Context API (Auth, Dark Mode)
+│   ├── pages/           # App pages (form, user profile)
+│   ├── styles/          # SCSS files (organized by feature)
+│   ├── App.jsx
+│   ├── main.jsx         # React entry point
+│   └── index.css
+│
+├── eslint.config.js
+├── vite.config.js       # Vite bundler config
+└── README.md
+```
+
+---
+
+## 3. Tech Stack
+
+**Frontend:** React + Context API + SCSS
+
+**Backend:** Node.js (Express-like structure with Firebase)
+
+**Database:** Firebase Firestore (NoSQL)
+
+**Other Tools:**
+
+* Firebase Auth for authentication
+* Firebase Storage for image uploads
+* Firebase Functions (if used)
+
+---
+
+## 4. Core Features
+
+### ✅ Authentication
+
+* Email/Password signup & login
+* JWT-like session handling via Firebase Auth
+* Google OAuth supported (if enabled)
+
+### ✅ Blog Post CRUD
+
+* Create, read, update, delete blogs
+* Store images in Firebase Storage
+* Firestore as database for posts, comments, analytics
+
+### ✅ Author Profile
+
+* Profile page with name, avatar, bio
+* List of user's own blog posts
+
+---
+
+## 5. Bonus Features
+
+* Blog SEO tags (meta title/description)
+* Search by title or tags
+* Likes, bookmarks, comments
+* Post analytics (views, engagement)
+* Dark mode (context API powered)
+
+---
+
+## 6. Installation & Setup
+
+### 6.1 Backend Setup
+
+```bash
+cd backend
+cp .env.example .env  # Add Firebase credentials
+npm install
+node index.js
+```
+
+### 6.2 Web Frontend Setup
+
+```bash
+npm install
+npm run dev
+```
+
+> The project uses **Vite** for fast development.
+
+---
+
+## 7. API & Methods (Firebase Driven)
+
+| File            | Purpose                |
+| --------------- | ---------------------- |
+| auth.js         | Signup/Login functions |
+| CreateBlog.js   | Blog creation logic    |
+| GetPosts.js     | Fetch all posts        |
+| GetUser.js      | Fetch user profile     |
+| GetComments.js  | Fetch post comments    |
+| PostComment.js  | Add new comment        |
+| GetAnalytics.js | Track post views/likes |
+
+---
+
+## 8. AI Integration
+
+AI tools were used for:
+
+* Generating CRUD boilerplate
+* Suggesting Firebase security rules
+* Drafting documentation & README
+* Suggesting frontend component structure
+
+---
+
+## 9. Deliverables
+
+* ✅ Hosted GitHub repo with `backend/` & `src/`
+* ✅ Working React frontend (Vite dev server)
+* ✅ REST backend using Firebase methods
+* ✅ Setup instructions (README)
+* ✅ AI usage documentation
+
+---
+
+## 10. Future Enhancements
+
+* Add pagination / infinite scroll
+* Migrate to Redux Toolkit for state management (if scaling)
+* Add push notifications for new posts/comments
+* Role-based access (admin moderation)
+* Flutter app for mobile (planned)

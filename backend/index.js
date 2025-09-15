@@ -3,24 +3,9 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const os = require("os");
 
 const app = express();
-const PORT = 5000;
-
-// Helper to get LAN IP so other devices can access
-function getLocalIp() {
-  const interfaces = os.networkInterfaces();
-  for (const iface of Object.values(interfaces)) {
-    for (const alias of iface) {
-      if (alias.family === "IPv4" && !alias.internal) {
-        return alias.address;
-      }
-    }
-  }
-  return "127.0.0.1";
-}
-const LOCAL_IP = getLocalIp();
+const PORT = process.env.PORT || 5000; // use Render's dynamic port
 
 // Ensure upload directories exist
 const ensureDir = (dir) => {
@@ -43,31 +28,37 @@ const storage = multer.diskStorage({
     cb(null, name);
   },
 });
-
 const upload = multer({ storage });
 
-// Enable CORS for local dev
+// Enable CORS for frontend
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*"); // allow all origins
+  res.setHeader("Access-Control-Allow-Origin", "*"); 
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
-// Serve uploaded files statically
+// Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Serve React frontend
+const frontendBuildPath = path.join(__dirname, "../dist");
+if (fs.existsSync(frontendBuildPath)) {
+  app.use(express.static(frontendBuildPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendBuildPath, "index.html"));
+  });
+}
 
 // Upload endpoint
 app.post("/api/upload", upload.array("files"), (req, res) => {
   try {
-    if (!req.files || req.files.length === 0) {
+    if (!req.files || req.files.length === 0)
       return res.status(400).json({ success: false, message: "No files uploaded" });
-    }
 
-    // Construct accessible URLs
     const fileUrls = req.files.map((file) => {
       const folder = file.mimetype.startsWith("image/") ? "images" : "videos";
-      return `http://${LOCAL_IP}:${PORT}/uploads/posts/${folder}/${file.filename}`;
+      return `/uploads/posts/${folder}/${file.filename}`; // relative URL, frontend will use same host
     });
 
     return res.json({ success: true, urls: fileUrls });
@@ -79,6 +70,5 @@ app.post("/api/upload", upload.array("files"), (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://${LOCAL_IP}:${PORT}`);
-  console.log("📁 Uploaded files will be stored in /uploads/posts/images & /uploads/posts/videos");
+  console.log(`🚀 Server running on port ${PORT}`);
 });

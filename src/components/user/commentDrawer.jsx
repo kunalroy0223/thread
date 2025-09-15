@@ -1,236 +1,202 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import "../../styles/user/commentDrawer.scss";
+import { getComments } from "../../../backend/methods/GetComments";
+import { postComment } from "../../../backend/methods/PostComment";
+import { getAnalytics } from "../../../backend/methods/GetAnalytics"; 
+import { postAnalytics } from "../../../backend/methods/PostAnalytics"; // ✅ unified analytics
 
-const CommentDrawer = ({ isOpen, onClose }) => {
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      username: "Anna Smith",
-      avatar: "https://randomuser.me/api/portraits/women/45.jpg",
-      text: "This is amazing! 🔥 Can't wait to see what you do next.",
-      liked: false,
-    },
-    {
-      id: 2,
-      username: "John Doe",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      text: "Great work! Really inspiring content. 👏",
-      liked: false,
-    },
-    {
-      id: 3,
-      username: "Sam Wilson",
-      avatar: "https://randomuser.me/api/portraits/men/33.jpg",
-      text: "Love this! 😍 Keep going.",
-      liked: false,
-    },
-    {
-      id: 4,
-      username: "Lucy Liu",
-      avatar: "https://randomuser.me/api/portraits/women/25.jpg",
-      text: "Fantastic post!",
-      liked: false,
-    },
-  ]);
+const CommentDrawer = ({ postId, isOpen, onClose, currentUser }) => {
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [likedComments, setLikedComments] = useState({});
+  const [analytics, setAnalytics] = useState({ likes: 0, comments: 0, views: 0 });
+  const [loading, setLoading] = useState(true);
 
-  const toggleLike = (id) => {
+  // Fetch comments + analytics when drawer opens
+  useEffect(() => {
+    if (!isOpen) return; // only fetch when open
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [commentsResult, analyticsResult] = await Promise.all([
+          getComments(postId),
+          getAnalytics(postId),
+        ]);
+
+        const commentsData = commentsResult?.success ? commentsResult.data || [] : [];
+        setComments(commentsData);
+
+        const analyticsData = analyticsResult?.success
+          ? analyticsResult.data || { likes: 0, comments: 0, views: 0 }
+          : { likes: 0, comments: 0, views: 0 };
+        setAnalytics(analyticsData);
+
+        // Track liked comments
+        const likedMap = {};
+        if (currentUser?.id) {
+          commentsData.forEach((c) => {
+            if (c.likedBy?.includes(currentUser.id)) likedMap[c.id] = true;
+          });
+        }
+        setLikedComments(likedMap);
+
+      } catch (err) {
+        console.error("Error fetching comments/analytics:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [isOpen, postId, currentUser?.id]);
+
+  // Toggle comment like
+  const handleLike = async (commentId) => {
+    if (!currentUser?.id) return;
+
+    const currentlyLiked = likedComments[commentId] || false;
+
+    // Optimistic UI update
+    setLikedComments((prev) => ({ ...prev, [commentId]: !currentlyLiked }));
     setComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, liked: !c.liked } : c))
+      prev.map((c) =>
+        c.id === commentId
+          ? { ...c, likesCount: (c.likesCount || 0) + (currentlyLiked ? -1 : 1) }
+          : c
+      )
     );
+
+    try {
+      await postAnalytics(postId, {
+        commentId,
+        likes: currentlyLiked ? -1 : 1,
+        userId: currentUser.id,
+      });
+    } catch (err) {
+      console.error("Error updating comment like:", err);
+      // Rollback on failure
+      setLikedComments((prev) => ({ ...prev, [commentId]: currentlyLiked }));
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === commentId
+            ? { ...c, likesCount: (c.likesCount || 0) + (currentlyLiked ? 1 : -1) }
+            : c
+        )
+      );
+    }
   };
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
-    setComments((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        username: "You",
-        avatar: "https://randomuser.me/api/portraits/lego/2.jpg",
-        text: newComment,
-        liked: false,
-      },
-    ]);
-    setNewComment("");
+  // Add a new comment
+  const handleAddComment = async () => {
+    if (!newComment.trim() || !currentUser?.id) return;
+
+    try {
+      const result = await postComment({
+        postId,
+        authorId: `/users/${currentUser.id}`,
+        content: newComment,
+        parentCommentId: null,
+      });
+
+      if (result.success) {
+        const newCommentObj = {
+          id: result.id,
+          authorId: `/users/${currentUser.id}`,
+          username: currentUser.username,
+          avatar: currentUser.avatar,
+          content: newComment,
+          likesCount: 0,
+          likedBy: [],
+          parentCommentId: null,
+        };
+
+        setComments((prev) => [...prev, newCommentObj]);
+        setNewComment("");
+        setAnalytics((prev) => ({ ...prev, comments: prev.comments + 1 }));
+      } else {
+        console.error(result.error);
+        alert("Failed to post comment. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error posting comment:", err);
+      alert("Unexpected error. Please try again.");
+    }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div
+      className="wrapper"
       style={{
-        ...styles.wrapper,
         transform: isOpen ? "translateY(0)" : "translateY(100%)",
         pointerEvents: isOpen ? "auto" : "none",
       }}
     >
-      <div style={styles.drawer}>
-        {/* Close Button */}
-        <button onClick={onClose} style={styles.closeBtn}>
-          ✕
-        </button>
+      <div className="drawer">
+        <button onClick={onClose} className="close-btn">✕</button>
+        <h2 className="heading">Comments</h2>
 
-        <h2 style={styles.heading}>Comments</h2>
-
-        {/* Scrollable comments */}
-        <div style={styles.commentsContainer}>
-          {comments.map((comment) => (
-            <div key={comment.id} style={styles.commentBox}>
-              <img
-                src={comment.avatar}
-                alt={comment.username}
-                style={styles.avatar}
-              />
-              <div style={styles.commentBody}>
-                <span style={styles.username}>{comment.username}</span>
-                <span style={styles.commentText}>{comment.text}</span>
-                <div style={styles.actions}>
-                  <button
-                    style={{
-                      ...styles.button,
-                      color: comment.liked ? "red" : "#666",
-                    }}
-                    onClick={() => toggleLike(comment.id)}
-                  >
-                    ❤️ Like
-                  </button>
-                  <button style={styles.button}>💬 Reply</button>
+        <div className="comments-container">
+          {loading && <p>Loading comments...</p>}
+          {!loading &&
+            comments.map((c) => (
+              <div key={c.id} className="comment-box">
+                <img
+                  src={c.avatar || "https://randomuser.me/api/portraits/lego/2.jpg"}
+                  alt={c.username || c.authorId.split("/").pop()}
+                  className="avatar"
+                />
+                <div className="comment-body">
+                  <span className="username">{c.username || c.authorId.split("/").pop()}</span>
+                  <span className="comment-text">{c.content}</span>
+                  <div className="actions">
+                    <button
+                      className="button heart-btn"
+                      style={{ color: likedComments[c.id] ? "red" : "#666" }}
+                      onClick={() => handleLike(c.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill={likedComments[c.id] ? "red" : "none"}
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 21C12 21 5 13.5 5 8.5C5 5.462 7.462 3 10.5 3C12.291 3 14 4.709 14 4.709C14 4.709 15.709 3 17.5 3C20.538 3 23 5.462 23 8.5C23 13.5 16 21 16 21H12Z"
+                        />
+                      </svg>
+                      <span className="like-count">{c.likesCount || 0}</span>
+                    </button>
+                    <button className="button">Reply</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
-        {/* Add Comment Box */}
-        <div style={styles.addCommentBox}>
+        <div className="add-comment-box">
           <input
             type="text"
             placeholder="Add a comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            style={styles.input}
+            className="input"
             onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
           />
-          <button style={styles.addButton} onClick={handleAddComment}>
+          <button className="add-button" onClick={handleAddComment}>
             Post
           </button>
         </div>
       </div>
     </div>
   );
-};
-
-// --- Styles ---
-const styles = {
-  wrapper: {
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    height: "40vh",
-    zIndex: 9999,
-    transition: "transform 0.3s ease-in-out",
-    display: "flex",
-    justifyContent: "center",
-  },
-  drawer: {
-    background: "#fff",
-    width: "100%",
-    maxWidth: "700px",
-    height: "100%",
-    borderTopLeftRadius: "16px",
-    borderTopRightRadius: "16px",
-    padding: "1rem",
-    boxShadow: "0 -4px 12px rgba(0,0,0,0.1)",
-    display: "flex",
-    flexDirection: "column",
-    position: "relative",
-  },
-  closeBtn: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    background: "none",
-    border: "none",
-    fontSize: "1.2rem",
-    cursor: "pointer",
-  },
-  heading: {
-    fontSize: "1.2rem",
-    fontWeight: "bold",
-    marginBottom: "0.8rem",
-    textAlign: "center",
-    paddingTop: "10px",
-  },
-  commentsContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.8rem",
-    marginBottom: "1rem",
-    overflowY: "auto", // scrollable
-  },
-  commentBox: {
-    display: "flex",
-    gap: "0.5rem",
-    background: "#f9f9f9",
-    borderRadius: "10px",
-    padding: "0.6rem",
-  },
-  avatar: {
-    width: "36px",
-    height: "36px",
-    borderRadius: "50%",
-    objectFit: "cover",
-  },
-  commentBody: {
-    display: "flex",
-    flexDirection: "column",
-    fontSize: "0.9rem",
-    width: "100%",
-  },
-  username: {
-    fontWeight: "600",
-    marginBottom: "0.2rem",
-  },
-  commentText: {
-    fontSize: "0.9rem",
-    lineHeight: 1.4,
-  },
-  actions: {
-    display: "flex",
-    gap: "1rem",
-    marginTop: "0.3rem",
-  },
-  button: {
-    border: "none",
-    background: "none",
-    fontSize: "0.8rem",
-    color: "#666",
-    cursor: "pointer",
-    padding: 0,
-  },
-  addCommentBox: {
-    display: "flex",
-    gap: "0.5rem",
-    paddingTop: "0.8rem",
-    borderTop: "1px solid #ddd",
-    background: "#fff",
-  },
-  input: {
-    flex: 1,
-    border: "1px solid #ddd",
-    borderRadius: "6px",
-    padding: "0.4rem 0.6rem",
-    fontSize: "0.9rem",
-    outline: "none",
-  },
-  addButton: {
-    background: "#4f46e5",
-    color: "#fff",
-    border: "none",
-    borderRadius: "6px",
-    padding: "0.4rem 1rem",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
 };
 
 export default CommentDrawer;

@@ -89,10 +89,6 @@ const Home = () => {
       </div>
     <main>
         <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
       </main>
     </>
   );
